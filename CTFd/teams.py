@@ -39,63 +39,63 @@ def listing():
     return render_template("teams/teams.html", teams=teams, pages=pages, curr_page=page)
 
 
-@teams.route("/teams/join", methods=["GET", "POST"])
-@authed_only
-@require_team_mode
-@ratelimit(method="POST", limit=10, interval=5)
-def join():
-    if request.method == "GET":
-        return render_template("teams/join_team.html")
-    if request.method == "POST":
-        teamname = request.form.get("name")
-        passphrase = request.form.get("password", "").strip()
+#@teams.route("/teams/join", methods=["GET", "POST"])
+#@authed_only
+#@require_team_mode
+#@ratelimit(method="POST", limit=10, interval=5)
+#def join():
+#    if request.method == "GET":
+#        return render_template("teams/join_team.html")
+#    if request.method == "POST":
+#        teamname = request.form.get("name")
+#        passphrase = request.form.get("password", "").strip()
+#
+#        team = Teams.query.filter_by(name=teamname).first()
+#        user = get_current_user()
+#        if team and verify_password(passphrase, team.password):
+#            user.team_id = team.id
+#            db.session.commit()
+#
+#            if len(team.members) == 1:
+#                team.captain_id = user.id
+#                db.session.commit()
+#
+#            return redirect(url_for("challenges.listing"))
+#        else:
+#            errors = ["That information is incorrect"]
+#            return render_template("teams/join_team.html", errors=errors)
 
-        team = Teams.query.filter_by(name=teamname).first()
-        user = get_current_user()
-        if team and verify_password(passphrase, team.password):
-            user.team_id = team.id
-            db.session.commit()
 
-            if len(team.members) == 1:
-                team.captain_id = user.id
-                db.session.commit()
-
-            return redirect(url_for("challenges.listing"))
-        else:
-            errors = ["That information is incorrect"]
-            return render_template("teams/join_team.html", errors=errors)
-
-
-@teams.route("/teams/new", methods=["GET", "POST"])
-@authed_only
-@require_team_mode
-def new():
-    if request.method == "GET":
-        return render_template("teams/new_team.html")
-    elif request.method == "POST":
-        teamname = request.form.get("name")
-        passphrase = request.form.get("password", "").strip()
-        errors = get_errors()
-
-        user = get_current_user()
-
-        existing_team = Teams.query.filter_by(name=teamname).first()
-        if existing_team:
-            errors.append("That team name is already taken")
-        if not teamname:
-            errors.append("That team name is invalid")
-
-        if errors:
-            return render_template("teams/new_team.html", errors=errors)
-
-        team = Teams(name=teamname, password=passphrase, captain_id=user.id)
-
-        db.session.add(team)
-        db.session.commit()
-
-        user.team_id = team.id
-        db.session.commit()
-        return redirect(url_for("challenges.listing"))
+#@teams.route("/teams/new", methods=["GET", "POST"])
+#@authed_only
+#@require_team_mode
+#def new():
+#    if request.method == "GET":
+#        return render_template("teams/new_team.html")
+#    elif request.method == "POST":
+#        teamname = request.form.get("name")
+#        passphrase = request.form.get("password", "").strip()
+#        errors = get_errors()
+#
+#        user = get_current_user()
+#
+#        existing_team = Teams.query.filter_by(name=teamname).first()
+#        if existing_team:
+#            errors.append("That team name is already taken")
+#        if not teamname:
+#            errors.append("That team name is invalid")
+#
+#        if errors:
+#            return render_template("teams/new_team.html", errors=errors)
+#
+#        team = Teams(name=teamname, password=passphrase, captain_id=user.id)
+#
+#        db.session.add(team)
+#        db.session.commit()
+#
+#        user.team_id = team.id
+#        db.session.commit()
+#        return redirect(url_for("challenges.listing"))
 
 
 @teams.route("/team")

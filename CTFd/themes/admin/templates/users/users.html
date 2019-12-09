@@ -55,6 +55,8 @@
 						</td>
 						<td class="d-md-table-cell d-lg-table-cell text-center"><b>Email</b>
 						</td>
+						<td class=""><b>Team</b>
+						</td>
 						<td class=""><b>Website</b>
 						</td>
 						<td class=""><b>Country</b>
@@ -89,6 +91,13 @@
 						<td class="team-email d-none d-md-table-cell d-lg-table-cell" value="{{ user.email }}">
 							{% if user.email %}
 								<a href="mailto:{{ user.email }}" target="_blank">{{ user.email | truncate(32) }}</a>
+							{% endif %}
+						</td>
+						<td class="team-email d-none d-md-table-cell d-lg-table-cell" value="{{ user.team.name }}">
+							{% if user.team.name %}
+								<a href="{{ url_for('admin.teams_detail', team_id=user.team.id) }}">
+									{{ user.team.name }}
+								</a>
 							{% endif %}
 						</td>
 						<td class="team-website text-center">
